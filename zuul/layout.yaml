@@ -1,0 +1,112 @@
+#
+# TODO
+# Remember to restart zuul and zuul-merger if you update this file.
+#
+
+projects:
+  # Project name
+  - name: openstack/cinder
+    # Pipeline name
+    silent:
+      # Job name
+      - dsvm-cinder-fss-iscsi-custom
+      - dsvm-cinder-fss-fc-custom
+
+#
+# Modify the three values above based on the following:
+
+#  Q. What do you want to use the CI for?
+# A1. Just testing internally: set the project name to openstack-dev/ci-sandbox.
+#     This is a testing ground for the CI. You can submit dummy patches to this
+#     project to trigger the CI.
+# A2. Officially testing cinder patches: set the project name to openstack/cinder.
+#     The CI will be in production mode and will run test jobs for every patch
+#     submitted to the official cinder project.
+
+#  Q. What do you want to do with the results?
+# A1. Just email the results internally: set the pipeline to silent.
+#     This is useful if you want to run jobs without posting the results to Gerrit.
+# A2. Post the results to Gerrit: set the pipeline to check.
+#     When the job finishes, the results will be posted to Gerrit and the link to 
+#     the logs will be included. This is required when the CI is in production mode.
+
+#  Q. Is our driver code officially merged into the openstack/cinder repo?
+# A1. Yes: Set the job name to dsvm-<proj>-fss-iscsi. Replace <proj> with either
+#     ci-sandbox or cinder. It should match the second part of the project name.
+# A2. No: Set the job name to dsvm-<proj>-fss-iscsi-custom. Replace <proj> with
+#     either ci-sandbox or cinder. It should match the second part of the project name.
+#     The '-custom' suffix at the end of the job name indicates that the job will 
+#     separately download our driver code from our private repo. Once our driver is 
+#     merged into the upstream repo, we no longer need to do this, and the '-custom' 
+#     suffix can be removed.
+
+#
+# Include openstack_functions.py to enable single-use nodes in nodepool.
+#
+includes:
+    # These functions are what enables single use nodes in nodepool.
+  - python-file: openstack_functions.py
+
+#
+# Define all dsvm-* jobs to be run in single-use nodes
+#
+jobs:
+  - name: ^dsvm-.*$
+    parameter-function: single_use_node
+
+#
+# Define pipelines
+#
+pipelines:
+  - name: check
+    description: CI in production mode. Results are publicly posted to Gerrit.
+    success-message: "Build succeeded."
+    failure-message: "Build failed."
+    footer-message: "Leave a comment with 'recheck falconstor' to trigger another test. For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/FalconStor_CI"
+    manager: IndependentPipelineManager
+    trigger:
+      gerrit:
+        - event: patchset-created
+        - event: change-restored
+        # recheck trigger that runs the check pipeline jobs when someone
+        # adds a comment to a review that says "recheck falconstor".
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck falconstor\s*$
+    success:
+      gerrit:
+        # Change this value to 1 to enable success votes
+        verified: 0
+      smtp:
+        to: openstack-ci@falconstor.com
+        from: openstack-ci@falconstor.com
+        subject: 'CI job PASSED for {change.project} {change.number},{change.patchset}'
+    failure:
+      gerrit:
+        # Change this value to -1 to enable failure votes
+        verified: 0
+      smtp:
+        to: openstack-ci@falconstor.com
+        from: openstack-ci@falconstor.com
+        subject: 'CI job FAILED for {change.project} {change.number},{change.patchset}'
+
+  - name: silent
+    description: CI in testing mode. Results are emailed but not publicly posted to Gerrit.
+    manager: IndependentPipelineManager
+    trigger:
+      gerrit:
+        - event: patchset-created
+        - event: change-restored
+        # recheck trigger that runs the check pipeline jobs when someone
+        # adds a comment to a review that says "recheck falconstor".
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck falconstor\s*$
+    success:
+      smtp:
+        to: openstack-ci@falconstor.com
+        from: openstack-ci@falconstor.com
+        subject: 'CI job PASSED for {change.project} {change.number},{change.patchset}'
+    failure:
+      smtp:
+        to: openstack-ci@falconstor.com
+        from: openstack-ci@falconstor.com
+        subject: 'CI job FAILED for {change.project} {change.number},{change.patchset}'
