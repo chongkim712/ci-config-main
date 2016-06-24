@@ -11,8 +11,8 @@
     jobs:
         - 'dsvm-{name}-fss-iscsi'
         - 'dsvm-{name}-fss-iscsi-custom'
-		- 'dsvm-{name}-fss-fc'
-		- 'dsvm-{name}-fss-fc-custom'
+        - 'dsvm-{name}-fss-fc'
+        - 'dsvm-{name}-fss-fc-custom'
 
 - project:
     name: 'cinder'
@@ -20,5 +20,5 @@
     jobs:
         - 'dsvm-{name}-fss-iscsi'
         - 'dsvm-{name}-fss-iscsi-custom'
-		- 'dsvm-{name}-fss-fc'
-		- 'dsvm-{name}-fss-fc-custom'
+        - 'dsvm-{name}-fss-fc'
+        - 'dsvm-{name}-fss-fc-custom'
