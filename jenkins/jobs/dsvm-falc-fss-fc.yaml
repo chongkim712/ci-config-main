@@ -28,12 +28,12 @@
 
           [[post-config|\$CINDER_CONF]]
           [DEFAULT]
-          enabled_backends=FSS
-          default_volume_type=FSSISCSIDriver
+          enabled_backends=FSS-FC
+          default_volume_type=FSSFCDriver
 
           [FSS]
-          volume_driver=cinder.volume.drivers.falconstor.iscsi.FSSISCSIDriver
-          volume_backend_name=FSSISCSIDriver
+          volume_driver=cinder.volume.drivers.falconstor.fc.FSSFCDriver
+          volume_backend_name=FSSFCDriver
           # TODO Update these values if the FSS being used for CI changes
           san_login=root
           san_password=IPStor101
@@ -44,7 +44,7 @@
           # overwritten with the .sample after post-config.
           [[post-extra|\$TEMPEST_CONFIG]]
           [volume]
-          storage_protocol=iSCSI
+          storage_protocol=FC
           vendor_name=FalconStor
           build_timeout=600
           [volume-feature-enabled]
@@ -53,7 +53,7 @@
 
           echo "Configure localrc file to properly setup CINDER_ENABLED_BACKENDS"
           cat <<EOF >>$BASE/new/devstack/localrc
-          CINDER_ENABLED_BACKENDS=FSS:FSSISCSIDriver
+          CINDER_ENABLED_BACKENDS=FSS-FC:FSSFCDriver
           ATTACH_ENCRYPTED_VOLUME_AVAILABLE=False
           EOF
 
