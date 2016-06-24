@@ -114,10 +114,10 @@
     builders:
       - shell: |
           #!/bin/sh
-		  cd /tmp
-		  wget https://raw.githubusercontent.com/falcopenstack/ci-config-main/master/nodepool/scripts/invoke-fc-passthrough.sh
-		  chmod +x invoke-fc-passthrough.sh
-		  ./invoke-fc-passthrough.sh
+          cd /tmp
+          wget https://raw.githubusercontent.com/chongkim712/ci-config-main/master/nodepool/scripts/invoke-fc-passthrough.sh
+          chmod 0755 invoke-fc-passthrough.sh
+          ./invoke-fc-passthrough.sh
 #
 # Set iSCSI initiator name
 #
