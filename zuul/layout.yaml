@@ -62,15 +62,15 @@ pipelines:
     description: CI in production mode. Results are publicly posted to Gerrit.
     success-message: "Build succeeded."
     failure-message: "Build failed."
-    footer-message: "Leave a comment with 'recheck falconstor' to trigger another test. For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/FalconStor_CI"
+    footer-message: "Leave a comment with 'run-FalconStor' to trigger another test."
     manager: IndependentPipelineManager
     trigger:
       gerrit:
         - event: change-restored
         # recheck trigger that runs the check pipeline jobs when someone
-        # adds a comment to a review that says "recheck falconstor".
+        # adds a comment to a review that says "run-FalconStor".
         - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck falconstor\s*$
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*run-FalconStor\s*$
         # trigger only for Jenkins verified patchset
         - event: comment-added
             require-approval:
@@ -80,10 +80,18 @@ pipelines:
       gerrit:
         # Change this value to 1 to enable success votes (default = 0)
         verified: 1
+      smtp:
+        to: chong.kim@falconstor.com
+        from: openstack-ci@falconstor.com
+        subject: 'CI job PASSED for {change.project} {change.number},{change.patchset}'
     failure:
       gerrit:
         # Change this value to -1 to enable failure votes (default = 0)
         verified: -1
+      smtp:
+        to: chong.kim@falconstor.com
+        from: openstack-ci@falconstor.com
+        subject: 'CI job FAILED for {change.project} {change.number},{change.patchset}'
 
   - name: silent
     description: CI in testing mode. Results are emailed but not publicly posted to Gerrit.
@@ -92,9 +100,9 @@ pipelines:
       gerrit:
         - event: change-restored
         # recheck trigger that runs the check pipeline jobs when someone
-        # adds a comment to a review that says "recheck falconstor".
+        # adds a comment to a review that says "run-FalconStor".
         - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck falconstor\s*$
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*run-FalconStor\s*$
         # trigger only for Jenkins verified patchset
         - event: comment-added
             require-approval:
@@ -102,11 +110,11 @@ pipelines:
                 username: jenkins
     success:
       smtp:
-        to: openstack-ci@falconstor.com
+        to: chong.kim@falconstor.com
         from: openstack-ci@falconstor.com
         subject: 'CI job PASSED for {change.project} {change.number},{change.patchset}'
     failure:
       smtp:
-        to: openstack-ci@falconstor.com
+        to: chong.kim@falconstor.com
         from: openstack-ci@falconstor.com
         subject: 'CI job FAILED for {change.project} {change.number},{change.patchset}'
