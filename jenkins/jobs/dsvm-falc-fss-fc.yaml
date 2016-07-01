@@ -4,7 +4,7 @@
 #
 - job-template:
     name: 'dsvm-{name}-fss-fc'
-    node: '{node}'
+    node: dsvm2-slave
 
     wrappers:
       - timeout:

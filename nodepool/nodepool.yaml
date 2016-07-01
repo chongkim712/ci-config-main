@@ -16,13 +16,31 @@ gearman-servers:
 labels:
   - name: dsvm-slave
     image: dpc
-    ready-script: invoke-fc-passthrough.sh
-    min-ready: 2
+    ready-script: set_iscsi_name.sh
+    min-ready: 1
     providers:
       - name: ci-opstack01
+  - name: dsvm2-slave
+    image: dpc2
+    ready-script: invoke-fc-passthrough.sh
+    min-ready: 1
+    providers:
+      - name: ci-opstack02
 
 diskimages:
     - name: dpc
+      elements:
+        - ubuntu
+        - vm
+        - openstack-repos
+        - puppet
+        - nodepool-base
+        - node-devstack
+      release: trusty
+      env-vars:
+        TMPDIR: /opt/dib_tmp
+        DIB_IMAGE_CACHE: /opt/dib_cache
+    - name: dpc2
       elements:
         - ubuntu
         - vm
@@ -55,6 +73,24 @@ providers:
         diskimage: dpc
         username: jenkins
         private-key: '/home/nodepool/.ssh/id_rsa'
-
+  - name: ci-opstack02
+    username: 'admin'
+    password: 'openstack'
+    auth-url: 'http://192.168.2.70:5000/v2.0'
+    project-name: 'admin'
+    max-servers: 2
+    boot-timeout: 1200
+    launch-timeout: 3600
+    keypair: 'jenkins'
+    pool: 'external'
+    networks:
+      #TODO: Enter the ID of the "internal" network on the provider
+      - net-id: '3341208a-8900-47de-9455-1f81c3b87cbe'
+    images:
+      - name: dpc2
+        min-ram: 8192
+        diskimage: dpc2
+        username: jenkins
+        private-key: '/home/nodepool/.ssh/id_rsa'
 targets:
   - name: jenkins1
