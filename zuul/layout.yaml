@@ -89,7 +89,7 @@ pipelines:
         # Change this value to -1 to enable failure votes (default = 0)
         verified: -1
       smtp:
-        to: openstack-ci@falconstor.com
+        to: chong.kim@falconstor.com
         from: openstack-ci@falconstor.com
         subject: 'CI job FAILED for {change.project} {change.number},{change.patchset}'
 
@@ -115,6 +115,6 @@ pipelines:
         subject: 'CI job PASSED for {change.project} {change.number},{change.patchset}'
     failure:
       smtp:
-        to: openstack-ci@falconstor.com
+        to: chong.kim@falconstor.com
         from: openstack-ci@falconstor.com
         subject: 'CI job FAILED for {change.project} {change.number},{change.patchset}'
