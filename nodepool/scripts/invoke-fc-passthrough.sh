@@ -60,7 +60,7 @@ sudo service open-iscsi restart
 # FC Passthrough setup starts here
 #
 echo "Export FC_PROVIDER env variable"
- export FC_PROVIDER=192.168.2.50
+ export FC_PROVIDER=192.168.2.70
  export FC_PROVIDER_USER=root
  export FC_PROVIDER_KEY=/opt/nodepool-scripts/passthrough
  export FC_PROVIDER_RC=/root/keystonerc_admin
