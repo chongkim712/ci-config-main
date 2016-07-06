@@ -21,7 +21,7 @@ labels:
     providers:
       - name: ci-opstack01
   - name: dsvm2-slave
-    image: dpc2
+    image: dpc
     ready-script: invoke-fc-passthrough.sh
     min-ready: 1
     providers:
@@ -29,18 +29,6 @@ labels:
 
 diskimages:
     - name: dpc
-      elements:
-        - ubuntu
-        - vm
-        - openstack-repos
-        - puppet
-        - nodepool-base
-        - node-devstack
-      release: trusty
-      env-vars:
-        TMPDIR: /opt/dib_tmp
-        DIB_IMAGE_CACHE: /opt/dib_cache
-    - name: dpc2
       elements:
         - ubuntu
         - vm
@@ -87,9 +75,9 @@ providers:
       #TODO: Enter the ID of the "internal" network on the provider
       - net-id: 'cb305e9f-9028-44a6-b086-021e67a1d241'
     images:
-      - name: dpc2
+      - name: dpc
         min-ram: 8192
-        diskimage: dpc2
+        diskimage: dpc
         username: jenkins
         private-key: '/home/nodepool/.ssh/id_rsa'
 targets:
