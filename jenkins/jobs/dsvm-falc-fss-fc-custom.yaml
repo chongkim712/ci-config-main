@@ -16,6 +16,7 @@
     builders:
       - link-logs
       - net-info
+      - install-fc-driver
       - devstack-checkout
       - shell: |
           #!/bin/bash -xe
