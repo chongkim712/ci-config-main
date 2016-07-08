@@ -2,6 +2,7 @@
 
 # Copyright (C) 2015 Hewlett-Packard Development Company, L.P.
 # Copyright (C) 2015 Pure Storage, Inc.
+# Copyright (C) 2016 FalconStor Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,15 +60,15 @@ sudo service open-iscsi restart
 #
 # FC Passthrough setup starts here
 #
-echo "Export FC_PROVIDER env variable"
- export FC_PROVIDER=192.168.2.70
- export FC_PROVIDER_USER=root
- export FC_PROVIDER_KEY=/opt/nodepool-scripts/passthrough
- export FC_PROVIDER_RC=/root/keystonerc_admin
+#echo "Export FC_PROVIDER env variable"
+export FC_PROVIDER=192.168.2.70
+export FC_PROVIDER_USER=root
+export FC_PROVIDER_KEY=/opt/nodepool-scripts/passthrough
+export FC_PROVIDER_RC=/root/keystonerc_admin
 #
 # For single node setups where the hypervisor is the same as the provider, and dns
 # is not configured, export this variable to use the provider ip as the hypervisor
- export FC_SINGLE_NODE=1
+export FC_SINGLE_NODE=1
 # /opt/nodepool-scripts/invoke-fc-passthrough.sh
 
 eth0_ip=$(hostname  -I | cut -f1 -d' ')

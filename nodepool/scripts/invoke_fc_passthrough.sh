@@ -65,6 +65,9 @@ fi
 echo "InitiatorName=$INITNAME" | sudo tee /etc/iscsi/initiatorname.iscsi
 sudo service open-iscsi restart
 
+sudo apt-get install -y sysfsutils
+echo $?
+
 #
 # FC Passthrough setup starts here
 #
@@ -89,7 +92,7 @@ if [[ -z $PROVIDER ]]; then
     PROVIDER="${eth0_ip_base}.1"
 fi
 
-PROVIDER_KEY=${FC_PROVIDER_KEY:-"/opt-nodepool-scripts/passthrough"}
+PROVIDER_KEY=${FC_PROVIDER_KEY:-"/opt/nodepool-scripts/passthrough"}
 PROVIDER_RC=${FC_PROVIDER_RC:-"keystonerc_jenkins"}
 
 CURRENT_USER=$(whoami)
