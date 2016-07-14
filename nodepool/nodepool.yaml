@@ -22,7 +22,7 @@ labels:
       - name: ci-opstack01
   - name: dsvm2-slave
     image: dpc
-    ready-script: invoke-fc-passthrough.sh
+    ready-script: invoke_fc_passthrough.sh
     min-ready: 1
     providers:
       - name: ci-opstack02
@@ -47,7 +47,7 @@ providers:
     password: 'openstack'
     auth-url: 'http://192.168.2.50:5000/v2.0'
     project-name: 'admin'
-    max-servers: 2
+    max-servers: 1
     boot-timeout: 1200
     launch-timeout: 3600
     keypair: 'jenkins'
@@ -73,7 +73,7 @@ providers:
     pool: 'external'
     networks:
       #TODO: Enter the ID of the "internal" network on the provider
-      - net-id: 'cb305e9f-9028-44a6-b086-021e67a1d241'
+      - net-id: '3341208a-8900-47de-9455-1f81c3b87cbe'
     images:
       - name: dpc
         min-ram: 8192
