@@ -76,7 +76,7 @@ pipelines:
 #          require-approval:
 #            - verified: 1
 #              username: jenkins
-               newer-than: 6h
+#               newer-than: 6h
 #        # recheck trigger that runs the check pipeline jobs when someone
 #        # adds a comment to a review that says "run-FalconStor".
 #        - event: comment-added
