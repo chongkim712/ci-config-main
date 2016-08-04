@@ -7,7 +7,7 @@ projects:
   # Project name
   - name: openstack/cinder
     # Pipeline name
-    check:
+    silent:
       # Job name
       - dsvm-cinder-fss-iscsi-custom
       - dsvm-cinder-fss-fc-custom
@@ -66,6 +66,7 @@ pipelines:
     failure-message: "Build failed."
     footer-message: "Leave a comment with 'run-FalconStor' to trigger another test. For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/FalconStor_CI"
     manager: IndependentPipelineManager
+    ignore-dependencies: true
     require:
       open: True
       current-patchset: True
@@ -76,7 +77,7 @@ pipelines:
 #          require-approval:
 #            - verified: 1
 #              username: jenkins
-#               newer-than: 6h
+#              newer-than: 1h
 #        # recheck trigger that runs the check pipeline jobs when someone
 #        # adds a comment to a review that says "run-FalconStor".
 #        - event: comment-added
@@ -111,11 +112,24 @@ pipelines:
         to: chong.kim@falconstor.com
         from: openstack-ci@falconstor.com
         subject: 'CI job MERGE-FAILED for {change.project} {change.number},{change.patchset}'
-    ignore-dependencies: true
 
   - name: silent
     description: CI in testing mode. Results are emailed but not publicly posted to Gerrit.
     manager: IndependentPipelineManager
+    ignore-dependencies: true
+#    # enqueue jenkins verified patchsets only
+#    trigger:
+#      gerrit:
+#        - event: comment-added
+#          require-approval:
+#            - verified: 1
+#              username: jenkins
+#              newer-than: 1h
+#        # recheck trigger that runs the check pipeline jobs when someone
+#        # adds a comment to a review that says "run-FalconStor".
+#        - event: comment-added
+#          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*(recheck|run-FalconStor)\s*$
+    # enqueue all new patchsets
     trigger:
       gerrit:
         - event: patchset-created
@@ -123,7 +137,7 @@ pipelines:
         # recheck trigger that runs the check pipeline jobs when someone
         # adds a comment to a review that says "run-FalconStor".
         - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*run-FalconStor\s*$
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*(recheck|run-FalconStor)\s*$
     success:
       smtp:
         to: openstack-ci@falconstor.com
