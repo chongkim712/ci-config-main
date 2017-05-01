@@ -1,10 +1,24 @@
 {
+  "release": {
+    "fedora": {
+      "24": {
+        "npm": ""
+      }
+    },
+    "opensuse": {
+      "42.2": {
+        "nodejs": "nodejs4",
+        "npm": "npm4"
+      }
+    }
+  },
   "family": {
     "debian": {
       "nodejs": "nodejs-legacy"
     },
     "suse": {
-      "npm": "nodejs-npm"
+      "nodejs": "nodejs6",
+      "npm": "npm6"
     }
   },
   "default": {

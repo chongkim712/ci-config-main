@@ -109,6 +109,18 @@
           echo "Network neighbors..."
           ip neighbor show
 #
+# Invoke FC Passthrough
+#
+- builder:
+    name: fc-passthrough
+    builders:
+      - shell: |
+          #!/bin/sh
+          cd /tmp
+          wget https://raw.githubusercontent.com/chongkim712/ci-config-main/master/nodepool/scripts/invoke-fc-passthrough.sh
+          chmod 0755 invoke-fc-passthrough.sh
+          ./invoke-fc-passthrough.sh
+#
 # Set iSCSI initiator name
 #
 - builder:
@@ -140,3 +152,170 @@
           fi
           echo "InitiatorName=$INITNAME" | sudo tee /etc/iscsi/initiatorname.iscsi
           sudo service open-iscsi restart
+          sudo service iscsid restart
+
+- builder:
+    name: pretest-hook-fc
+    builders:
+      - shell: |
+          #!/bin/bash -xe
+
+          function pre_test_hook {{
+
+          echo "Configure the local.conf file to properly setup FalconStor driver in cinder.conf"
+          cat <<EOF >$BASE/new/devstack/local.conf
+
+          [[post-config|\$CINDER_CONF]]
+          [DEFAULT]
+          enabled_backends=FSS-FC
+          default_volume_type=FSSFCDriver
+
+          [FSS-FC]
+          volume_driver=cinder.volume.drivers.falconstor.fc.FSSFCDriver
+          volume_backend_name=FSSFCDriver
+          # TODO Update these values if the FSS being used for CI changes
+          san_login=root
+          san_password=IPStor101
+          san_ip=192.168.2.42
+          fss_pool=1
+          ##fss_pools=A:1
+          fss_debug=true
+
+          # Use test-config because the tempest configuration file is
+          # overwritten with the .sample after post-config.
+          # (https://bugs.launchpad.net/devstack/+bug/1646391)
+          [[test-config|\$TEMPEST_CONFIG]]
+          [volume]
+          storage_protocol=FC
+          vendor_name=FalconStor
+          build_timeout=600
+          [volume-feature-enabled]
+          backup=false
+          EOF
+
+          ##echo "Configure localrc.tmp file to properly setup CINDER_ENABLED_BACKENDS"
+          ##cat <<EOF >>$BASE/new/devstack/localrc.tmp
+          ##CINDER_ENABLED_BACKENDS=FSS-FC:FSSFCDriver
+          ##ATTACH_ENCRYPTED_VOLUME_AVAILABLE=False
+          ##EOF
+
+          ##export DEVSTACK_LOCAL_CONFIG=$(< ${BASE}/new/devstack/localrc.tmp)
+
+          sudo sed -i -e '1i[[local|localrc]]\' $BASE/new/devstack/local.conf
+          sudo sed -i -e '2iCINDER_ENABLED_BACKENDS=FSS-FC:FSSFCDriver\' $BASE/new/devstack/local.conf
+          sudo sed -i -e '3iATTACH_ENCRYPTED_VOLUME_AVAILABLE=False\' $BASE/new/devstack/local.conf
+
+          #echo "Downloading custom tempest to skip shelve tests"
+          #cd $BASE/new/tempest/tempest/api/compute/volumes
+          #wget -O test_attach_volume.py http://192.168.2.32/privateCK/test_attach_volume.py
+          #chmod 0664 test_attach_volume.py
+
+          }}
+
+          export -f pre_test_hook
+
+          # To keep our CINDER_ENABLED_BACKENDS configuration in localrc
+          export KEEP_LOCALRC=true
+
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=300
+          export DEVSTACK_GATE_TEMPEST=1
+          export TEMPEST_CONCURRENCY=1
+          export DEVSTACK_GATE_NEUTRON=1
+          echo "Disable test_shelve_volume because it fails due to SSH timeout (Bug 1298472)"
+          export 'DEVSTACK_GATE_TEMPEST_REGEX=^(?=.*volume)(?!.*boto)(?!.*test_volume_boot_pattern)(?!.*test_minimum_basic_scenario)(?!.*test_shelve_volume)(?!.*test_detach_volume_shelved_or_offload_server)(?!.*test_list_get_two_volume_attachments)(?!.*test_unmanage_manage_snapshot)(?!.*test_volume_swap).*'
+
+          export GIT_BASE="https://review.openstack.org/p"
+
+          if [ -z $ZUUL_PROJECT ]; then
+              export ZUUL_PROJECT=openstack-dev/ci-sandbox
+          fi
+          if [ -z $ZUUL_BRANCH ]; then
+              export ZUUL_BRANCH=master
+          fi
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
+
+- builder:
+    name: pretest-hook-iscsi
+    builders:
+      - shell: |
+          #!/bin/bash -xe
+
+          function pre_test_hook {{
+
+          echo "Configure the local.conf file to properly setup FalconStor driver in cinder.conf"
+          cat <<EOF >$BASE/new/devstack/local.conf
+
+          [[post-config|\$CINDER_CONF]]
+          [DEFAULT]
+          enabled_backends=FSS
+          default_volume_type=FSSISCSIDriver
+
+          [FSS]
+          volume_driver=cinder.volume.drivers.falconstor.iscsi.FSSISCSIDriver
+          volume_backend_name=FSSISCSIDriver
+          # TODO Update these values if the FSS being used for CI changes
+          san_login=root
+          san_password=IPStor101
+          san_ip=192.168.2.22
+          fss_pool=1
+          ##fss_pools=A:1
+          fss_debug=true
+
+          # Use test-config because the tempest configuration file is
+          # overwritten with the .sample after post-config.
+          # (https://bugs.launchpad.net/devstack/+bug/1646391)
+          [[test-config|\$TEMPEST_CONFIG]]
+          [volume]
+          storage_protocol=iSCSI
+          vendor_name=FalconStor
+          build_timeout=600
+          [volume-feature-enabled]
+          backup=false
+          EOF
+
+          ##echo "Configure localrc.tmp file to properly setup CINDER_ENABLED_BACKENDS"
+          ##cat <<EOF >>$BASE/new/devstack/localrc.tmp
+          ##CINDER_ENABLED_BACKENDS=FSS:FSSISCSIDriver
+          ##ATTACH_ENCRYPTED_VOLUME_AVAILABLE=False
+          ##EOF
+
+          ##export DEVSTACK_LOCAL_CONFIG=$(< ${BASE}/new/devstack/localrc.tmp)
+
+          sudo sed -i -e '1i[[local|localrc]]\' $BASE/new/devstack/local.conf
+          sudo sed -i -e '2iCINDER_ENABLED_BACKENDS=FSS:FSSISCSIDriver\' $BASE/new/devstack/local.conf
+          sudo sed -i -e '3iATTACH_ENCRYPTED_VOLUME_AVAILABLE=False\' $BASE/new/devstack/local.conf
+
+          #echo "Downloading custom tempest to skip shelve tests"
+          #cd $BASE/new/tempest/tempest/api/compute/volumes
+          #wget -O test_attach_volume.py http://192.168.2.32/privateCK/test_attach_volume.py
+          #chmod 0664 test_attach_volume.py
+
+          }}
+
+          export -f pre_test_hook
+
+          # To keep our CINDER_ENABLED_BACKENDS configuration in localrc
+          export KEEP_LOCALRC=true
+
+          export PYTHONUNBUFFERED=true
+          export DEVSTACK_GATE_TIMEOUT=300
+          export DEVSTACK_GATE_TEMPEST=1
+          export TEMPEST_CONCURRENCY=1
+          export DEVSTACK_GATE_NEUTRON=1
+          echo "Disable test_shelve_volume because it fails due to SSH timeout (Bug 1298472)"
+          export 'DEVSTACK_GATE_TEMPEST_REGEX=^(?=.*volume)(?!.*boto)(?!.*test_volume_boot_pattern)(?!.*test_minimum_basic_scenario)(?!.*test_shelve_volume)(?!.*test_detach_volume_shelved_or_offload_server)(?!.*test_list_get_two_volume_attachments)(?!.*test_unmanage_manage_snapshot).*'
+
+          export GIT_BASE="https://review.openstack.org/p"
+
+          if [ -z $ZUUL_PROJECT ]; then
+              export ZUUL_PROJECT=openstack-dev/ci-sandbox
+          fi
+          if [ -z $ZUUL_BRANCH ]; then
+              export ZUUL_BRANCH=master
+          fi
+
+          cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
+          ./safe-devstack-vm-gate-wrap.sh
