@@ -32,14 +32,14 @@ diskimages:
       elements:
         - ubuntu-minimal
         - vm
-        - simple-init
+#        - simple-init
         - openstack-repos
         - nodepool-base
         - cache-devstack
-        - initialize-urandom
-        - growroot
+#        - initialize-urandom
+#        - growroot
         - infra-package-needs
-        - stackviz
+#        - stackviz
       release: xenial
       env-vars:
         TMPDIR: /opt/dib_tmp_xenial
