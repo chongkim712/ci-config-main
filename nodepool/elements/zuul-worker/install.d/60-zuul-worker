@@ -35,6 +35,7 @@ fi
 mkdir /home/zuul/.ssh
 chmod 700 /home/zuul/.ssh
 cp $_pub_key /home/zuul/.ssh/authorized_keys
+chmod 644 /home/zuul/.ssh/authorized_keys
 
 # cleanup everything to the right owner
 chown -R zuul:zuul /home/zuul
