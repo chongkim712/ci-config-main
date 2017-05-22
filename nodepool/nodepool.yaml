@@ -32,18 +32,18 @@ diskimages:
       elements:
         - ubuntu-minimal
         - vm
-#        - simple-init
+        - simple-init
         - openstack-repos
         - nodepool-base
         - cache-devstack
-#        - initialize-urandom
-#        - growroot
+        - initialize-urandom
+        - growroot
         - infra-package-needs
-#        - stackviz
+        - stackviz
       release: xenial
       env-vars:
-        TMPDIR: /opt/dib_tmp_xenial
-        DIB_IMAGE_CACHE: /opt/dib_cache_xenial
+        TMPDIR: /opt/dib_tmp
+        DIB_IMAGE_CACHE: /opt/dib_cache
 
 providers:
 #  - name: ci-opstack01
@@ -86,3 +86,6 @@ providers:
         private-key: '/home/nodepool/.ssh/id_rsa'
 targets:
   - name: jenkins1
+    jenkins:
+	  url: 'http://localhost:8080/'
+
