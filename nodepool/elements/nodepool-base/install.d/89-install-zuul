@@ -20,8 +20,5 @@ fi
 set -eu
 set -o pipefail
 
-## Install gcc manually - CK
-##sudo apt-get -y --force-yes install build-essential
-
 virtualenv /usr/zuul-env
 /usr/zuul-env/bin/pip install git+https://git.openstack.org/openstack-infra/zuul.git
