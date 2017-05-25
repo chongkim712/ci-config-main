@@ -177,8 +177,8 @@
           san_login=root
           san_password=IPStor101
           san_ip=192.168.2.42
-          fss_pool=1
-          ##fss_pools=A:1
+          ##fss_pool=1
+          fss_pools=A:1
           fss_debug=true
 
           # Use test-config because the tempest configuration file is
@@ -260,8 +260,8 @@
           san_login=root
           san_password=IPStor101
           san_ip=192.168.2.22
-          fss_pool=1
-          ##fss_pools=A:1
+          ##fss_pool=1
+          fss_pools=A:1
           fss_debug=true
 
           # Use test-config because the tempest configuration file is
