@@ -30,16 +30,11 @@ labels:
 diskimages:
     - name: dpc-xenial
       elements:
-        - ubuntu-minimal
+        - ubuntu
         - vm
-        - simple-init
         - openstack-repos
         - nodepool-base
         - cache-devstack
-        - initialize-urandom
-        - growroot
-        - infra-package-needs
-        - stackviz
       release: xenial
       env-vars:
         TMPDIR: /opt/dib_tmp
