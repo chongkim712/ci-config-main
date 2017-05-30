@@ -6,11 +6,12 @@ fi
 set -eu
 set -o pipefail
 
-ZUUL_USER_SSH_PUBLIC_KEY=${ZUUL_USER_SSH_PUBLIC_KEY:-$HOME/.ssh/id_rsa.pub}
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtMZ9PTfg+o2XXc0Ui8tUowDe7+p1KKFP35Wbb36Xe3HsNF8jK0+hri0KFNmEGIGvSpSjNszyH4s5DPKnEtFjE78+W5MAJ8U4Ed3k6+UFZtrbAbUAhMausp5DmgYmeRZ3O7dieGbsK9QkUs/jIt0ZxKJCyDqhrZjJs/lrWV1ZI7sAAx0tE/PTzTPYNMZWSx1cz8NoOZan3ZQu944Z8B+OBp3tIw62fG3iH1OtnF195xNFgUjS0lvMK3fSYscvLfkmwZMHmJCSseJHKHkkKXWqjQlBpteG7M5GKv1m2yMVvzqYgughVKgsM5rHX/ScFg0aR1W5opBDWI5ezR1fEp47X" > /tmp/gerrit_user_public_key
+ZUUL_USER_SSH_PUBLIC_KEY=${ZUUL_USER_SSH_PUBLIC_KEY:-/tmp/gerrit_user_public_key}
 
 if [ ! -f $ZUUL_USER_SSH_PUBLIC_KEY ]; then
     die "Can not find public key for zuul user!"
 fi
 
 # save the public key inside the chroot
-cat $ZUUL_USER_SSH_PUBLIC_KEY >> $TMP_HOOKS_PATH/zuul-user-ssh-public-key
+##cat $ZUUL_USER_SSH_PUBLIC_KEY >> $TMP_HOOKS_PATH/zuul-user-ssh-public-key
