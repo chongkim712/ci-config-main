@@ -14,4 +14,4 @@ if [ ! -f $ZUUL_USER_SSH_PUBLIC_KEY ]; then
 fi
 
 # save the public key inside the chroot
-##cat $ZUUL_USER_SSH_PUBLIC_KEY >> $TMP_HOOKS_PATH/zuul-user-ssh-public-key
+cat $ZUUL_USER_SSH_PUBLIC_KEY >> $TMP_HOOKS_PATH/zuul-user-ssh-public-key
