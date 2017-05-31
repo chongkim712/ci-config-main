@@ -160,7 +160,7 @@
       - shell: |
           #!/bin/bash -xe
 
-          function pre_test_hook {{
+          function pre_test_hook {
 
           echo "Configure the local.conf file to properly setup FalconStor driver in cinder.conf"
           cat <<EOF >$BASE/new/devstack/local.conf
@@ -227,7 +227,7 @@
           #wget -O test_attach_volume.py http://192.168.2.32/privateCK/test_attach_volume.py
           #chmod 0664 test_attach_volume.py
 
-          }}
+          }
 
           export -f pre_test_hook
 
@@ -260,7 +260,7 @@
       - shell: |
           #!/bin/bash -xe
 
-          function pre_test_hook {{
+          function pre_test_hook {
 
           echo "Configure the local.conf file to properly setup FalconStor driver in cinder.conf"
           cat <<EOF >$BASE/new/devstack/local.conf
@@ -327,7 +327,7 @@
           #wget -O test_attach_volume.py http://192.168.2.32/privateCK/test_attach_volume.py
           #chmod 0664 test_attach_volume.py
 
-          }}
+          }
 
           export -f pre_test_hook
 
