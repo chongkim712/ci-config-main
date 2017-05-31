@@ -65,7 +65,7 @@ providers:
     password: 'openstack'
     auth-url: 'http://192.168.2.70:5000/v2.0'
     project-name: 'admin'
-    max-servers: 1
+    max-servers: 2
     boot-timeout: 1200
     launch-timeout: 3600
     keypair: 'jenkins'
