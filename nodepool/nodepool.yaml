@@ -53,7 +53,7 @@ providers:
 #    pool: 'external'
 #    networks:
 #      #TODO: Enter the ID of the "internal" network on the provider
-#      - net-id: '207f564f-f036-4aab-97cf-8f34499ad9ca'
+#      - net-id: '0e60e739-cf75-427c-96f3-789c614b6b17'
 #    images:
 #      - name: dpc-xenial
 #        min-ram: 8192
