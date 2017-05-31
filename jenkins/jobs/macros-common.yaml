@@ -193,6 +193,23 @@
           backup=false
           EOF
 
+          ##echo "Downloading latest driver from private repository"
+          ##cd $BASE/new/cinder/cinder/volume/drivers
+          ##rm -rf falconstor
+          ##mkdir falconstor
+          ##chmod 0755 falconstor
+          ##cd $BASE/new/cinder/cinder/volume/drivers/falconstor
+          ##wget http://192.168.2.32/privateCK/__init__.py 
+          ##wget http://192.168.2.32/privateCK/iscsi.py 
+          ##wget http://192.168.2.32/privateCK/rest_proxy.py
+          ##wget http://192.168.2.32/privateCK/fss_common.py
+          ##wget http://192.168.2.32/privateCK/fc.py
+          ##chmod 0644 *.py
+          ##cd $BASE/new/cinder/cinder/tests/unit/volume/drivers
+          ##rm -rf test_falconstor_fss.py
+          ##wget http://192.168.2.32/privateCK/test_falconstor_fss.py
+          ##chmod 0644 test_falconstor_fss.py
+
           ##echo "Configure localrc.tmp file to properly setup CINDER_ENABLED_BACKENDS"
           ##cat <<EOF >>$BASE/new/devstack/localrc.tmp
           ##CINDER_ENABLED_BACKENDS=FSS-FC:FSSFCDriver
@@ -275,6 +292,23 @@
           [volume-feature-enabled]
           backup=false
           EOF
+
+          ##echo "Downloading latest driver from private repository"
+          ##cd $BASE/new/cinder/cinder/volume/drivers
+          ##rm -rf falconstor
+          ##mkdir falconstor
+          ##chmod 0755 falconstor
+          ##cd $BASE/new/cinder/cinder/volume/drivers/falconstor
+          ##wget http://192.168.2.32/privateCK/__init__.py 
+          ##wget http://192.168.2.32/privateCK/iscsi.py 
+          ##wget http://192.168.2.32/privateCK/rest_proxy.py
+          ##wget http://192.168.2.32/privateCK/fss_common.py
+          ##wget http://192.168.2.32/privateCK/fc.py
+          ##chmod 0644 *.py
+          ##cd $BASE/new/cinder/cinder/tests/unit/volume/drivers
+          ##rm -rf test_falconstor_fss.py
+          ##wget http://192.168.2.32/privateCK/test_falconstor_fss.py
+          ##chmod 0644 test_falconstor_fss.py
 
           ##echo "Configure localrc.tmp file to properly setup CINDER_ENABLED_BACKENDS"
           ##cat <<EOF >>$BASE/new/devstack/localrc.tmp
